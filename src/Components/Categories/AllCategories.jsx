@@ -1,16 +1,17 @@
+
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import MealService from '../../Service/TheMealService'
+import CategoriesService from '../../Service/CategoriesService'
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 
-const mealService = new MealService();
+const categoriesService = new CategoriesService();
 
 const AllCategories = () => {
     const {isLoading, isError, data, error} = useQuery({
         queryKey: ['categories'],
-        queryFn: () => mealService.getAllCategories(),
+        queryFn: () => categoriesService.getAllCategories(),
     });
 
     if (isLoading) return <div>Loading</div>
@@ -19,16 +20,13 @@ const AllCategories = () => {
   return (
     <Container>
         <h1 className='fs-1 fw-bold text-uppercase quicksand text-white'> Livre des recettes </h1>
+        <Link className='quicksand text-white mx-2 link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover' to='/listfavoritesmeals'>Recettes Favoris</Link>
         <Card className='mt-5 p-0' md={12}>
-            <Card.Title className='fs-1 px-5 pt-4 pb-2 fw-bold merienda text-dark border-bottom 
-            border-dark'> Toutes les catégories </Card.Title>
+            <Card.Title className='fs-1 px-5 pt-4 pb-2 fw-bold merienda text-dark border-bottom border-dark'> Les catégories </Card.Title>
             <div className='my-2'>
                 {data && data.categories.map(category =>
-                    <Link className='link-success link-offset-2 link-underline-opacity-25 
-                     link-underline-opacity-100-hover' to={`/categories/${category.strCategory}`}
-                      key={category.idCategory}>
-                        <Card.Subtitle className='py-3 fs-5 fw-bolder text-dark quicksand'>
-                            {category.strCategory}</Card.Subtitle>
+                    <Link className='link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover' to={`/categories/${category.strCategory}`} key={category.idCategory}>
+                        <Card.Subtitle className='py-3 fs-5 fw-bolder text-dark quicksand'>{category.strCategory}</Card.Subtitle>
                     </Link>
                 )}
             </div>
@@ -36,4 +34,5 @@ const AllCategories = () => {
     </Container>
   )
 }
+
 export default AllCategories

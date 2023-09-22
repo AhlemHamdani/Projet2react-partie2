@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
@@ -6,17 +7,18 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
-import MealService from '../../Service/TheMealService'
+import RecipeService from '../../Service/RecipeService'
 import Accordeon from '../Accordeon/Accordeon';
+import FavoriteButton from '../../favorites/components/FavoriteButton/FavoriteButton';
 
-const mealService = new MealService();
+const recipeService = new RecipeService();
 
 const Meal = () => {
   const params = useParams();
 
   const { isLoading, isError, data, error } = useQuery({
       queryKey: ['meal', params.id],
-      queryFn: () => mealService.getMeal(params.id),
+      queryFn: () => recipeService.getMeal(params.id),
   });
 
   if (isLoading) return <div>Loading</div>
@@ -25,8 +27,8 @@ const Meal = () => {
 
   return (
     <Container fluid>
-        <Link className='quicksand text-white link-light link-offset-2 link-underline-opacity-25 
-        link-underline-opacity-100-hover' to='/'> Retourner à la liste des catégories</Link>
+        <Link className='quicksand text-white mx-2 link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover' to='/'> Retourner à la liste des catégories </Link>
+        <Link className='quicksand text-white mx-2 link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover' to='/listfavoritesmeals'>Les recettes favoris</Link>
         <Card className='my-4'>
           <Col md={12}>
             {data && data.meals.map(info =>
@@ -35,6 +37,7 @@ const Meal = () => {
                   <Card.Text className='quicksand fs-5 text-success'>{info.strCategory}</Card.Text>
                   <Image src={info.strMealThumb} alt={info.strMeal} fluid thumbnail />
                   <Accordeon info={info}></Accordeon>
+                  <FavoriteButton meal={info} />
                 </Col>
             )}
           </Col>
